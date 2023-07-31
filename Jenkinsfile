@@ -50,11 +50,9 @@ String commitMessage
       }
     }
     release = releaseMessage(commitMessage)
-    if (release != null && release.action == "release"){
+    if (BRANCH_NAME == "main" && release != null && release.action == "release"){
       def tagName = release.component + "-" + release.version
       def orgRepo = scmGetOrgRepo scmData.GIT_URL
-      /*
-      def tagExists = false
       def tagHash = ""
       stage('Pre Release checks') {
         echo "Chart: " + release.component
@@ -70,7 +68,7 @@ String commitMessage
           warning "Release tag already exists"
           tagHash = res.trim().split("\\s+")[0]
           if (tagHash != scmData.GIT_COMMIT){
-            error "Yag is not this commit (" +scmData.GIT_COMMIT+ ") but set to ( "+ tagHash")"
+            error "Yag is not this commit (" +scmData.GIT_COMMIT+ ") but set to ( "+ tagHash + ")"
           }
         } else {
           echo "Tag does not already exist"
@@ -82,15 +80,12 @@ String commitMessage
           echo "Release does not already exist on github"
         }
       }
-      */
       def downloadURL
       container('k8s') {
         stage('Package Chart') {
           sh(script: "helm package ./${release.component}/")
         }
         def packageName = tagName+".tgz"
-        downloadURL = "https://github.com/SimonStiil/helm/releases/download/base-chart-0.0.1/base-chart-0.0.1.tgz"
-        /*
         stage('Release Chart') {
           downloadURL = githubReleaseFlow repository: orgRepo.repoName, 
                                           release: tagName,
@@ -98,7 +93,6 @@ String commitMessage
                                           commit: scmData.GIT_COMMIT
          
         }
-        */
         downloadURL = downloadURL.replace(packageName,"")
       }
       stage('Update Index') {
@@ -109,8 +103,6 @@ String commitMessage
           sh(script: "cp ${orgRepo.repoName}/index.yaml . && helm repo index --url ${downloadURL} --merge index.yaml . && cp index.yaml ${orgRepo.repoName}/")
         }
         dir(orgRepo.repoName){
-        
-
           withCredentials([gitUsernamePassword(credentialsId: 'github-login-secret', gitToolName: 'Default')]) {
             sh(script: "git add index.yaml && git commit -m \"release ${tagName}\" && git push --set-upstream origin index")
           }
