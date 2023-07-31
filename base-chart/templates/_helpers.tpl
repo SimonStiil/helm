@@ -40,6 +40,24 @@ helm.sh/chart: {{ include "base-chart.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.git.url }}
+stiil.dk/git-url: {{ .Values.git.url }}
+{{- end }}
+{{- if .Values.git.org }}
+stiil.dk/git-org: {{ .Values.git.org }}
+{{- end }}
+{{- if .Values.git.repo }}
+stiil.dk/git-repo: {{ .Values.git.repo }}
+{{- end }}
+{{- if .Values.git.branch }}
+stiil.dk/git-branch: {{ .Values.git.branch }}
+{{- end }}
+{{- if .Values.git.tag }}
+stiil.dk/git-tag: {{ .Values.git.tag }}
+{{- end }}
+{{- if .Values.git.commit }}
+stiil.dk/git-commit: {{ .Values.git.commit }}
+{{- end }}
 {{- end }}
 
 {{/*
