@@ -1,4 +1,4 @@
-@Library('pipeline-library')
+@Library('pipeline-library@devops-github')
 import static dk.stiil.pipeline.Constants.*
 import java.util.regex.Pattern
 // library located at https://github.com/SimonStiil/pipeline-library
@@ -42,6 +42,7 @@ String commitMessage
        * GIT_COMMITTER_NAME, GIT_PREVIOUS_COMMIT, GIT_PREVIOUS_SUCCESSFUL_COMMIT,
        * GIT_URL
        */ 
+      echo scmData.toString()
       // Save scmData & commitMessage for later
       commitMessage = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
       // setup username and email for jenkins user 
