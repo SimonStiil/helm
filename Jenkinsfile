@@ -1,4 +1,4 @@
-@Library('pipeline-library@devops-github')
+@Library('pipeline-library')
 import static dk.stiil.pipeline.Constants.*
 import java.util.regex.Pattern
 // library located at https://github.com/SimonStiil/pipeline-library
